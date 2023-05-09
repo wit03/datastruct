@@ -32,6 +32,43 @@ void createRandom(int arr[], int size)
     }
 }
 
+void mergeReverse(int arr[], int left[], int right[], int n, int m) {
+    int i, j;
+    for (i = 0; i < n; i++)
+        arr[i] = left[i];
+    for (j = 0; j < m; j++, i++)
+        arr[i] = right[j];
+}
+
+void separate(int arr[], int n) {
+    if (n <= 1)
+        return;
+
+    if (n == 2) {
+        int swap = arr[0];
+        arr[0] = arr[1];
+        arr[1] = swap;
+        return;
+    }
+
+    int i, j;
+    int m = (n + 1) / 2;
+    int* left = (int*)malloc(m * sizeof(int));
+    int* right = (int*)malloc((n - m) * sizeof(int));
+
+    for (i = 0, j = 0; i < n; i = i + 2, j++) //Storing alternate elements in left subarray
+        left[j] = arr[i];
+
+    for (i = 1, j = 0; i < n; i = i + 2, j++) //Storing alternate elements in right subarray
+        right[j] = arr[i];
+
+    separate(left, m);
+    separate(right, n - m);
+    mergeReverse(arr, left, right, m, n - m);
+    free(left);
+    free(right);
+}
+
 void merge(int arr[], int l, int m, int r) {
     int i, j, k;
     int n1 = m - l + 1;
@@ -153,11 +190,13 @@ int main() {
     createRandom(avgCaseMerge, SIZE);
 
     for(int i = 0; i < SIZE; i++) {
+        worstCaseMerge[i] = i;
         avgCaseQuick[i] = avgCaseMerge[i];
-        worstCaseMerge[i] = SIZE -i;
         worstCaseQuick[i] = SIZE - i;
     }
 
+    separate(worstCaseMerge, SIZE);
+    
     printf("Average Case\n");
     printf("Merge Sort: %lf\n", mergeTimer(avgCaseMerge, 0, SIZE-1));
     printf("Quick Sort: %lf\n", quickTimer(avgCaseQuick, 0, SIZE-1));
@@ -165,32 +204,6 @@ int main() {
     printf("Worst Case\n");
     printf("Merge Sort: %lf\n", mergeTimer(worstCaseMerge, 0, SIZE-1));
     printf("Quick Sort: %lf\n", quickTimer(worstCaseQuick, 0, SIZE-1));
-
-    
-
-    // printf("Merge Sort:\n");
-    // printf("Given array is \n");
-    // printArray(arr, SIZE);
-
-    // mergeSort(arr, 0, SIZE - 1);
-
-    // printf("Sorted array is\n");
-    // printArray(arr, SIZE);
-
-    // printf("\nQuick Sort:\n");
-    // printf("Given array is \n");
-    // printArray(arr, SIZE);
-
-    // quickSort(arr, 0, SIZE - 1);
-
-    // printf("Sorted array is \n");
-    // printArray(arr, SIZE);
-
-    // printArray(bestCase, SIZE);
-    // printf("\n");
-    // printArray(avgCaseMerge, SIZE);
-    // printf("\n");
-    // printArray(worstCaseMerge, SIZE);
 
     return 0;
 }
