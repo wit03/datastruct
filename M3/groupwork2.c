@@ -111,14 +111,9 @@ void merge(int arr[], int l, int m, int r) {
 
 void mergeSort(int arr[], int l, int r) {
     if (l < r) {
-        // find the middle point
         int m = l + (r - l) / 2;
-
-        // sort first and second halves
         mergeSort(arr, l, m);
         mergeSort(arr, m + 1, r);
-
-        // merge the sorted halves
         merge(arr, l, m, r);
     }
 }
@@ -143,7 +138,6 @@ int partition(int arr[], int low, int high) {
     return (i + 1);
 }
 
-// Quicksort function
 void quickSort(int arr[], int low, int high) {
     if (low < high) {
         int pivot_index = partition(arr, low, high);
